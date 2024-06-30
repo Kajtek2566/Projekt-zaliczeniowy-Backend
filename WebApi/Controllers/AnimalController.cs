@@ -1,4 +1,6 @@
 ﻿using Application.Interfaces;
+using Application.Services;
+using Domain.DTO;
 using Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
@@ -15,18 +17,19 @@ namespace WebApi.Controllers
         {
             _animalService = animalService;
         } 
+
         [HttpGet]
-        public IEnumerable<Animal> Get()
+        public async Task<IEnumerable<AnimalDTO>> Get()
         {
-            return _animalService.FindAll();
+            return await _animalService.FindAll();
         }
 
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            Animal animal;
-            animal = _animalService.FindById(id);
+            AnimalDTO animal;
+            animal = await _animalService.FindById(id);
             if (animal == null)
             {
                 return NotFound();
@@ -36,7 +39,7 @@ namespace WebApi.Controllers
 
 
         [HttpPost]
-        public IActionResult Post([FromBody] Animal animal)
+        public async Task<IActionResult> Post([FromBody] AnimalDTO animal)
         {
             if (animal.Id == null)
                 return BadRequest("Missing ID");
@@ -44,11 +47,10 @@ namespace WebApi.Controllers
             return Created();
         }
 
-
-        [HttpPut("{id}")]
-        public IActionResult Put([FromRoute] int id, [FromBody] Animal animal)
+        [HttpPut]
+        public IActionResult Put([FromBody] AnimalDTO animal)
         {
-            _animalService.Update(id, animal);
+            _animalService.Update(animal);
             return Ok();
         }
 

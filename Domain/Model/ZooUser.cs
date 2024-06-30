@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Model
 {
-    public class ZooUser : IdentityUser
+    public class ZooUser
     {
         public string FirstName { get; set; }
 
