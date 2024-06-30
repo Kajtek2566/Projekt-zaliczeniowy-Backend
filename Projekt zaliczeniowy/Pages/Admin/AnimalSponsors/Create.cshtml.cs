@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Domain.Model;
 using Infrastructure.Data;
 
-namespace Projekt_zaliczeniowy.AnimalSponsors
+namespace Projekt_zaliczeniowy.Admin.AnimalSponsors
 {
     public class CreateModel : PageModel
     {

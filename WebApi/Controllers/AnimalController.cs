@@ -2,6 +2,7 @@
 using Application.Services;
 using Domain.DTO;
 using Domain.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 
@@ -19,13 +20,14 @@ namespace WebApi.Controllers
         } 
 
         [HttpGet]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IEnumerable<AnimalDTO>> Get()
         {
             return await _animalService.FindAll();
         }
 
-
         [HttpGet("{id}")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> Get(int id)
         {
             AnimalDTO animal;
@@ -39,15 +41,17 @@ namespace WebApi.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> Post([FromBody] AnimalDTO animal)
         {
             if (animal.Id == null)
                 return BadRequest("Missing ID");
-            _animalService.Add(animal);
+            await _animalService.Add(animal);
             return Created();
         }
 
         [HttpPut]
+        [Authorize(Policy = "AdminPolicy")]
         public IActionResult Put([FromBody] AnimalDTO animal)
         {
             _animalService.Update(animal);
@@ -56,6 +60,7 @@ namespace WebApi.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminPolicy")]
         public IActionResult Delete(int id)
         {
             _animalService.Delete(id);

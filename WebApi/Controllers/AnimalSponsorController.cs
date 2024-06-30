@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -15,12 +16,14 @@ namespace WebApi.Controllers
             _animalSponsorService = animalSponsorService;
         }
 
+        [Authorize(Policy = "AdminOrUserPolicy")]
         [HttpGet]
         public async Task<IEnumerable<AnimalSponsorDTO>> Get()
         {
             return await _animalSponsorService.FindAllAnimalSponsorsAsync();
         }
 
+        [Authorize(Policy = "AdminOrUserPolicy")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AnimalSponsorDTO animalSponsor)
         {
@@ -30,6 +33,7 @@ namespace WebApi.Controllers
             return Created();
         }
 
+        [Authorize(Policy = "AdminOrUserPolicy")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] AnimalSponsorDTO animalSponsor)
         {
@@ -37,6 +41,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [Authorize(Policy = "AdminOrUserPolicy")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -2,9 +2,11 @@
 using Application.Services;
 using Domain.DTO;
 using Domain.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 
 namespace WebApi.Controllers
 {
@@ -20,47 +22,62 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ZooUserDTO>> Get()
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult<IEnumerable<ZooUser>>> GetUsers()
         {
-            return await _zooUserService.FindAll();
+            var users = await _zooUserService.GetAllUsersAsync();
+            return Ok(users);
         }
 
-
-        [HttpGet("{userName}")]
-        public async Task<IActionResult> Get(string email)
+        [HttpGet("{id}")]
+        [Authorize(Policy = "AdminOrUserPolicy")]
+        public async Task<ActionResult<ZooUser>> GetUser(int id)
         {
-            ZooUserDTO zooUser;
-            zooUser = await _zooUserService.FindByUserName(email);
-            if (zooUser == null)
+            var user = await _zooUserService.GetUserByIdAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return Ok(zooUser);
-        }
 
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUserRole = User.FindFirstValue(ClaimTypes.Role);
+
+            if (currentUserRole != "Admin" && currentUserId != user.ID.ToString())
+            {
+                return Forbid();
+            }
+
+            return Ok(user);
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ZooUserDTO zooUser)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult<ZooUser>> AddUser(ZooUser user)
         {
-            if (zooUser.UserName == null)
-                return BadRequest("Missing user name");
-            await _zooUserService.Add(zooUser);
-            return Created();
+            await _zooUserService.AddUserAsync(user);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
-        [HttpPut]
-        public IActionResult Put([FromBody] ZooUserDTO zooUser)
+        [HttpPut("{id}")]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] ZooUserDTO zooUserDTO)
         {
-            _zooUserService.Update(zooUser);
-            return Ok();
+            if (id != zooUserDTO.ID)
+            {
+                return BadRequest();
+            }
+
+            await _zooUserService.UpdateUserAsync(zooUserDTO);
+            return NoContent();
         }
 
 
-        [HttpDelete("{userName}")]
-        public IActionResult Delete(string userName)
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            _zooUserService.Delete(userName);
-            return Ok();
+            await _zooUserService.DeleteUserAsync(id);
+            return NoContent();
         }
 
     }

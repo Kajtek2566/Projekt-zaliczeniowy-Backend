@@ -1,4 +1,5 @@
 ﻿using Domain.DTO;
+using Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace Application.Services
 {
     public interface IZooUserService
     {
-        Task Add(ZooUserDTO zooUserDTO);
-        Task Delete(string userName);
-        Task Update(ZooUserDTO zooUserDTO);
-        Task<IEnumerable<ZooUserDTO>> FindAll();
-        Task<ZooUserDTO> FindByUserName(string userName);
-
+        Task<IEnumerable<ZooUserDTO>> GetAllUsersAsync();
+        Task<ZooUserDTO> GetUserByIdAsync(int id);
+        Task<ZooUser> GetUserByLoginAsync(string login);
+        Task AddUserAsync(ZooUser zooUser);
+        Task UpdateUserAsync(ZooUserDTO zooUserDTO);
+        Task DeleteUserAsync(int id);
         Task RegisterUserAsync(RegisterDTO registerDTO);
     }
 }

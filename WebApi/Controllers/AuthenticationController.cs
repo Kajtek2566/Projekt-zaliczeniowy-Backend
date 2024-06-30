@@ -10,36 +10,35 @@ using System.Text;
 
 namespace WebApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AuthenticationController : ControllerBase
     {
-       
         private readonly IConfiguration _configuration;
-        private readonly IZooUserService _zooUserService; 
-        private readonly UserManager<ZooUser> _userManager; 
+        private readonly IZooUserService _zooUserService;
 
-        public AuthenticationController(IConfiguration configuration, IZooUserService zooUserService, UserManager<ZooUser> userManager)
+        public AuthenticationController(IConfiguration configuration, IZooUserService zooUserService)
         {
             _configuration = configuration;
             _zooUserService = zooUserService;
-            _userManager = userManager;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
         {
-            if (string.IsNullOrWhiteSpace(registerDTO.UserName) || string.IsNullOrWhiteSpace(registerDTO.Password))
+            if (string.IsNullOrWhiteSpace(registerDTO.Login) || string.IsNullOrWhiteSpace(registerDTO.Password))
             {
-                return BadRequest(new { Message = "Nazwa i Hasło są wymagane" });
+                return BadRequest(new { Message = "Username and password are required." });
             }
 
-            var existingUser = await _zooUserService.FindByUserName(registerDTO.UserName);
+            var existingUser = await _zooUserService.GetUserByLoginAsync(registerDTO.Login);
             if (existingUser != null)
             {
-                return Conflict(new { Message = "Ta Nazwa już istnieje." });
+                return Conflict(new { Message = "Username already exists." });
             }
 
             await _zooUserService.RegisterUserAsync(registerDTO);
-            return Ok(new { Message = "Użytkownik został utworzony" });
+            return Ok(new { Message = "User registered successfully" });
         }
 
         [HttpPost("login")]
@@ -47,28 +46,28 @@ namespace WebApi.Controllers
         {
             if (string.IsNullOrWhiteSpace(login.UserName) || string.IsNullOrWhiteSpace(login.Password))
             {
-                return BadRequest(new { Message = "Nazwa i Hasło są wymagane" });
+                return BadRequest(new { Message = "Username and password are required." });
             }
-            //await _userManager.CheckPasswordAsync(user, login.Password))  
-            var user = await _userManager.FindByNameAsync(login.UserName);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.PasswordHash))
+
+            var user = await _zooUserService.GetUserByLoginAsync(login.UserName);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
-                return Unauthorized(new { Message = "Nieprawidłowa Nazwa albo Hasło." });
+                return Unauthorized(new { Message = "Invalid username or password." });
             }
 
             var tokenString = GenerateJWTToken(user);
             return Ok(new { Token = tokenString });
         }
 
-        private string GenerateJWTToken(ZooUser user)
+        private string GenerateJWTToken(ZooUser zooUser)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserName),
-               // new Claim(ClaimTypes.Role, user.)
+                new Claim(ClaimTypes.NameIdentifier, zooUser.Id.ToString()),
+                new Claim(ClaimTypes.Role, zooUser.Role)
             };
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],

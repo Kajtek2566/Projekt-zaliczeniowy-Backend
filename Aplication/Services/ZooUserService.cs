@@ -21,38 +21,68 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task Add(ZooUserDTO zooUserDTO)
+        public async Task<IEnumerable<ZooUserDTO>> GetAllUsersAsync()
         {
-            var zooUser = _mapper.Map<ZooUser>(zooUserDTO);
-            await _zooUserRepository.AddAsync(zooUser);
+            var users = await _zooUserRepository.GetAllUsersAsync();
+            return _mapper.Map<IEnumerable<ZooUserDTO>>(users);
         }
 
-        public async Task Delete(string userName)
+        public async Task<ZooUserDTO> GetUserByIdAsync(int id)
         {
-            await _zooUserRepository.DeleteAsync(userName);
+            var user = await _zooUserRepository.GetUserByIdAsync(id);
+            return _mapper.Map<ZooUserDTO>(user);
         }
 
-        public async Task<IEnumerable<ZooUserDTO>> FindAll()
+        public async Task<ZooUser> GetUserByLoginAsync(string login)
         {
-            var zooUsers = await _zooUserRepository.FindAllAsync();
-            return _mapper.Map<IEnumerable<ZooUserDTO>>(zooUsers);
+            return await _zooUserRepository.GetUserByLoginAsync(login);
         }
 
-        public async Task<ZooUserDTO> FindByUserName(string userName)
+        public async Task AddUserAsync(ZooUser zooUser)
         {
-            var zooUser = await _zooUserRepository.FindByUserNameAsync(userName);
-            return _mapper.Map<ZooUserDTO>(zooUser);
+            zooUser.Password = BCrypt.Net.BCrypt.HashPassword(zooUser.Password);
+            await _zooUserRepository.AddUserAsync(zooUser);
         }
 
-        public Task RegisterUserAsync(RegisterDTO registerDTO)
+        public async Task UpdateUserAsync(ZooUserDTO zooUserDTO)
         {
-            throw new NotImplementedException();
+            var existingUser = await _zooUserRepository.GetUserByIdAsync(zooUserDTO.ID);
+
+            if (existingUser == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+
+            // Copy only editable fields, leave the password unchanged
+            existingUser.Login = zooUserDTO.Login;
+            existingUser.FirstName = zooUserDTO.FirstName;
+            existingUser.LastName = zooUserDTO.LastName;
+            existingUser.Email = zooUserDTO.Email;
+            existingUser.PhoneNumber = zooUserDTO.PhoneNumber;
+            existingUser.Role = zooUserDTO.Role;
+
+            await _zooUserRepository.UpdateUserAsync(existingUser);
         }
 
-        public async Task Update(ZooUserDTO zooUserDTO)
+        public async Task DeleteUserAsync(int id)
         {
-            var zooUser = _mapper.Map<ZooUser>(zooUserDTO);
-            await _zooUserRepository.UpdateAsync(zooUser);
+            await _zooUserRepository.DeleteUserAsync(id);
+        }
+
+        public async Task RegisterUserAsync(RegisterDTO registerDTO)
+        {
+            var user = new ZooUser
+            {
+                Login = registerDTO.Login,
+                Password = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password),
+                FirstName = registerDTO.FirstName,
+                LastName = registerDTO.LastName,
+                Email = registerDTO.Email,
+                PhoneNumber = registerDTO.PhoneNumber,
+                Role = "User"
+            };
+
+            await _zooUserRepository.AddUserAsync(user);
         }
     }
 }

@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class ZooDbContext : IdentityDbContext<ZooUser>
+    public class ZooDbContext : DbContext
     {
         public ZooDbContext(DbContextOptions<ZooDbContext> options) : base (options) 
         { }
@@ -22,60 +24,44 @@ namespace Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            string adminId = Guid.NewGuid().ToString();
 
-            string adminRoleId = Guid.NewGuid().ToString();
-            string employeeRoleId = Guid.NewGuid().ToString();
+            builder.Entity<ZooUser>()
+                .HasMany(u => u.AnimalSponsors)
+                .WithOne(r => r.ZooUser)
+                .HasForeignKey(r => r.zooUserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            PasswordHasher<ZooUser> passwordHasher = new PasswordHasher<ZooUser>();
-            builder.Entity<IdentityRole>().HasData(
-                new IdentityRole
+            // Konfiguracja relacji Car-Rental (jeden do wielu)
+            builder.Entity<Animal>()
+                .HasMany(c => c.AnimalSponsors)
+                .WithOne(r => r.Animal)
+                .HasForeignKey(r => r.AnimalId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ZooUser>().HasData(
+                new ZooUser
                 {
-                    Name = "adminRole",
-                    NormalizedName = "ADMINROLE",
-                    Id = adminRoleId,
-                    ConcurrencyStamp = adminRoleId,
+                    Id = 1,
+                    Login = "admin",
+                    Password = BCrypt.Net.BCrypt.HashPassword("Admin123!@#"),
+                    FirstName = "admin",
+                    LastName = "admin",
+                    Email = "admin@domain.com",
+                    PhoneNumber = "111222333",
+                    Role = "Admin"
                 },
-                new IdentityRole
+                new ZooUser
                 {
-                    Name = "employee",
-                    NormalizedName = "EMPLOYEE",
-                    Id = employeeRoleId,
-                    ConcurrencyStamp = employeeRoleId,
-                });
-
-            var admin = new ZooUser
-            {
-                Id = adminId,
-                FirstName = "admin",
-                LastName = "admin",
-                Email = "admin@wp.pl",
-                EmailConfirmed = true,
-                UserName = "Admin",
-                NormalizedUserName = "ADMIN",
-                NormalizedEmail = "ADMIN@WP.PL"
-            };
-
-            admin.PasswordHash = passwordHasher.HashPassword(admin, "Admin123!@#");
-
-            builder.Entity<ZooUser>().HasData(admin);
-
-            builder.Entity<IdentityUserRole<string>>()
-                .HasData
-                (
-                    new IdentityUserRole<string>
-                    {
-                        UserId = adminId,
-                        RoleId = adminRoleId,
-                    }
-                );
-
-            builder.Entity<AnimalSponsor>()
-                .HasOne(a => a.ZooUser)
-                .WithMany(z => z.AnimalSponsors)
-                .HasForeignKey(a => a.UserName)
-                .IsRequired();
-
+                    Id = 2,
+                    Login = "Kajetan25",
+                    Password = BCrypt.Net.BCrypt.HashPassword("Q@wertyuiop123"),
+                    FirstName = "Kajetan",
+                    LastName = "Stach",
+                    Email = "kajetan.stach@wp.pl",
+                    PhoneNumber = "123456789",
+                    Role = "User"
+                }
+            );
         }
     }
 }

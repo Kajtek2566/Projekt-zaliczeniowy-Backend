@@ -12,49 +12,46 @@ namespace Application.Interfaces.Repositories
 {
     public class ZooUserRepository : IZooUserRepository
     {
-        private readonly UserManager<ZooUser> _userManager;
-        public ZooUserRepository(UserManager<ZooUser> userManager)
+        private readonly ZooDbContext _context;
+        public ZooUserRepository(ZooDbContext context)
         {
-            _userManager = userManager;
+            _context = context;
         }
 
-        public async Task AddAsync(ZooUser zooUser)
+        public async Task<IEnumerable<ZooUser>> GetAllUsersAsync()
         {
-            await _userManager.CreateAsync(zooUser);
+            return await _context.AnimalOwners.ToListAsync();
         }
 
-        public async Task DeleteAsync(string userName)
+        public async Task<ZooUser> GetUserByIdAsync(int id)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            return await _context.AnimalOwners.FindAsync(id);
+        }
 
+        public async Task<ZooUser> GetUserByLoginAsync(string login)
+        {
+            return await _context.AnimalOwners.FirstOrDefaultAsync(u => u.Login == login);
+        }
+
+        public async Task AddUserAsync(ZooUser user)
+        {
+            await _context.AnimalOwners.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserAsync(ZooUser user)
+        {
+            _context.AnimalOwners.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserAsync(int id)
+        {
+            var user = await _context.AnimalOwners.FindAsync(id);
             if (user != null)
             {
-                await _userManager.DeleteAsync(user);
-            }
-        }
-
-        public async Task<IEnumerable<ZooUser>> FindAllAsync()
-        {
-            return await _userManager.Users.ToListAsync();
-        }
-
-        public async Task<ZooUser> FindByUserNameAsync(string userName)
-        {
-            return await _userManager.FindByNameAsync(userName);
-        }
-
-        public async Task UpdateAsync(ZooUser zooUser)
-        {
-            var user = await _userManager.FindByNameAsync(zooUser.UserName);
-
-            if (user != null)
-            {
-                
-                user.FirstName = zooUser.FirstName;
-                user.LastName = zooUser.LastName;
-                user.UserName = zooUser.UserName;
-                
-                await _userManager.UpdateAsync(user);
+                _context.AnimalOwners.Remove(user);
+                await _context.SaveChangesAsync();
             }
         }
     }

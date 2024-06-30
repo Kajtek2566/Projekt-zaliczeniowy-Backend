@@ -17,7 +17,7 @@ namespace Domain.Model
         public int AnimalId { get; set; }
         public Animal? Animal { get; set; }
 
-        public string UserName { get; set; }
+        public int zooUserId { get; set; }
 
         public ZooUser? ZooUser { get; set; }
 
