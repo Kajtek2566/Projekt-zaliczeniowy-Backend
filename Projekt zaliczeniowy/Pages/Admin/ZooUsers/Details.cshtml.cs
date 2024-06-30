@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Projekt_zaliczeniowy.ServicesClient;
 
-namespace Labs2024_WebPages.Pages.Admin.ZooUsers
+namespace EditModel.Pages.Admin.ZooUsers
 {
     public class DetailsModel : PageModel
     {

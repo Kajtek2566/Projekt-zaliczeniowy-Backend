@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Application.Services;
 using Domain.DTO;
 
-namespace Labs2024_WebPages.Pages.Admin.ZooUsers
+namespace Projekt_zaliczeniowy.Pages.Admin.ZooUsers
 {
     public class EditModel : PageModel
     {

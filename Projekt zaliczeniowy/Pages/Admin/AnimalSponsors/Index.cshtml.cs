@@ -9,7 +9,7 @@ using Domain.Model;
 using Infrastructure.Data;
 
 
-namespace Projekt_zaliczeniowy.Admin.AnimalSponsors
+namespace Projekt_zaliczeniowy.Pages.Admin.AnimalSponsors
 {
     public class IndexModel : PageModel
     {

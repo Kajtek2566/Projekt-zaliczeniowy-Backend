@@ -9,7 +9,7 @@ using Domain.Model;
 using Infrastructure.Data;
 
 
-namespace Projekt_zaliczeniowy.Animals
+namespace Projekt_zaliczeniowy.Pages.Admin.Animals
 {
     public class DeleteModel : PageModel
     {
