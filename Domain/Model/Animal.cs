@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace Domain.Model
         public string Name { get; set; }
 
         public string Species { get; set; }
+
+        public Status Status { get; set; }
 
         public ICollection<AnimalSponsor>? AnimalSponsors { get; set; }
     }
