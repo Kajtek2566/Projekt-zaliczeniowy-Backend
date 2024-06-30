@@ -4,3 +4,127 @@ GET {{WebApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+### AuthenticationController
+
+### Login to get JWT token
+POST {{WebApi_HostAddress}}/api/Authentication/login
+Content-Type: application/json
+
+{
+  "UserName": "Admin",
+  "Password": "Admin123!@#"
+}
+
+### Variable to hold JWT token
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTcxOTc4ODA2MSwiaXNzIjoiS2FqZXRhbiIsImF1ZCI6IkthamV0YW4ifQ.ijNBIUeivC3VW4SNnlKPPWgbjSGure918DybIyoOSYI
+
+### AnimalController
+
+### Get all animals
+GET {{WebApi_HostAddress}}/api/Animal
+Authorization: Bearer {{token}}
+
+### Get an animal by ID
+GET {{WebApi_HostAddress}}/api/Animal/1
+Authorization: Bearer {{token}}
+
+### Add a new animal
+POST {{WebApi_HostAddress}}/api/Animal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "Id": 123,
+  "Name": "Lion",
+  "Species": "Panthera leo",
+  "Age": 5
+}
+
+### Update an animal
+PUT {{WebApi_HostAddress}}/api/Animal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "Id": 123,
+  "Name": "Lion",
+  "Species": "Panthera leo",
+  "Age": 6
+}
+
+### Delete an animal
+DELETE {{WebApi_HostAddress}}/api/Animal/123
+Authorization: Bearer {{token}}
+
+### AnimalSponsorController
+
+### Get all animal sponsors
+GET {{WebApi_HostAddress}}/api/AnimalSponsor
+Authorization: Bearer {{token}}
+
+### Add a new animal sponsor
+POST {{WebApi_HostAddress}}/api/AnimalSponsor
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "Id": 456,
+  "AnimalId": 123,
+  "SponsorName": "John Doe",
+  "Amount": 100.0
+}
+
+### Update an animal sponsor
+PUT {{WebApi_HostAddress}}/api/AnimalSponsor
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "Id": 456,
+  "AnimalId": 123,
+  "SponsorName": "John Doe",
+  "Amount": 150.0
+}
+
+### Delete an animal sponsor
+DELETE {{WebApi_HostAddress}}/api/AnimalSponsor/456
+Authorization: Bearer {{token}}
+
+### ZooUserController
+
+### Get all users
+GET {{WebApi_HostAddress}}/api/ZooUser
+Authorization: Bearer {{token}}
+
+### Get a user by ID
+GET {{WebApi_HostAddress}}/api/ZooUser/1
+Authorization: Bearer {{token}}
+
+### Add a new user
+POST {{WebApi_HostAddress}}/api/ZooUser
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "Id": 789,
+  "Login": "newuser2",
+  "Password": "Password123!",
+  "Role": "User"
+}
+
+### Update a user
+PUT {{WebApi_HostAddress}}/api/ZooUser/789
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "ID": 789,
+  "Login": "updateduser",
+  "Password": "UpdatedPassword123!",
+  "Role": "User"
+}
+
+### Delete a user
+DELETE {{WebApi_HostAddress}}/api/ZooUser/789
+Authorization: Bearer {{token}}

@@ -23,7 +23,7 @@
                 @Html.DisplayNameFor(model => model.AnimalSponsor[0].Animal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AnimalSponsor[0].UserName)
+                @Html.DisplayNameFor(model => model.AnimalSponsor[0].zooUserId)
             </th>
             <th></th>
         </tr>
@@ -42,7 +42,7 @@
                     @Html.DisplayFor(modelItem => item.Animal.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
+                    @Html.DisplayFor(modelItem => item.zooUserId)
                 </td>
                 <td>
                     <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |

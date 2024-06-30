@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Projekt_zaliczeniowy.ServicesClient;
 using Domain.DTO;
 
-namespace EditModel.Pages.Admin.ZooUsers
+namespace Projekt_zaliczeniowy.Pages.Admin.ZooUsers
 {
     public class DeleteModel : PageModel
     {

@@ -4,36 +4,36 @@
 <h2>Edit User</h2>
 
 <form method="post">
-    <input type="hidden" asp-for="User.ID" />
+    <input type="hidden" asp-for="ZooUser.ID" />
     <div class="form-group">
-        <label asp-for="User.ID"></label>
-        <input asp-for="User.ID" class="form-control" disabled />
-        <span asp-validation-for="User.ID" class="text-danger"></span>
+        <label asp-for="ZooUser.ID"></label>
+        <input asp-for="ZooUser.ID" class="form-control" disabled />
+        <span asp-validation-for="ZooUser.ID" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="User.FirstName"></label>
-        <input asp-for="User.FirstName" class="form-control" />
-        <span asp-validation-for="User.FirstName" class="text-danger"></span>
+        <label asp-for="ZooUser.FirstName"></label>
+        <input asp-for="ZooUser.FirstName" class="form-control" />
+        <span asp-validation-for="ZooUser.FirstName" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="User.LastName"></label>
-        <input asp-for="User.LastName" class="form-control" />
-        <span asp-validation-for="User.LastName" class="text-danger"></span>
+        <label asp-for="ZooUser.LastName"></label>
+        <input asp-for="ZooUser.LastName" class="form-control" />
+        <span asp-validation-for="ZooUser.LastName" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="User.Login"></label>
-        <input asp-for="User.Login" class="form-control" />
-        <span asp-validation-for="User.Login" class="text-danger"></span>
+        <label asp-for="ZooUser.Login"></label>
+        <input asp-for="ZooUser.Login" class="form-control" />
+        <span asp-validation-for="ZooUser.Login" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="User.Email"></label>
-        <input asp-for="User.Email" class="form-control" />
-        <span asp-validation-for="User.Email" class="text-danger"></span>
+        <label asp-for="ZooUser.Email"></label>
+        <input asp-for="ZooUser.Email" class="form-control" />
+        <span asp-validation-for="ZooUser.Email" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="User.PhoneNumber"></label>
-        <input asp-for="User.PhoneNumber" class="form-control" />
-        <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+        <label asp-for="ZooUser.PhoneNumber"></label>
+        <input asp-for="ZooUser.PhoneNumber" class="form-control" />
+        <span asp-validation-for="ZooUser.PhoneNumber" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-page="./Index" class="btn btn-secondary">Cancel</a>

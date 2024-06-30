@@ -10,51 +10,51 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.ID)
+            @Html.DisplayNameFor(model => model.ZooUser.ID)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.ID)
+            @Html.DisplayFor(model => model.ZooUser.ID)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.FirstName)
+            @Html.DisplayNameFor(model => model.ZooUser.FirstName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.FirstName)
+            @Html.DisplayFor(model => model.ZooUser.FirstName)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.LastName)
+            @Html.DisplayNameFor(model => model.ZooUser.LastName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.LastName)
+            @Html.DisplayFor(model => model.ZooUser.LastName)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Login)
+            @Html.DisplayNameFor(model => model.ZooUser.Login)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Login)
+            @Html.DisplayFor(model => model.ZooUser.Login)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Role)
+            @Html.DisplayNameFor(model => model.ZooUser.Role)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Role)
+            @Html.DisplayFor(model => model.ZooUser.Role)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Email)
+            @Html.DisplayNameFor(model => model.ZooUser.Email)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Email)
+            @Html.DisplayFor(model => model.ZooUser.Email)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+            @Html.DisplayNameFor(model => model.ZooUser.PhoneNumber)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.PhoneNumber)
+            @Html.DisplayFor(model => model.ZooUser.PhoneNumber)
         </dd>
     </dl>
 
     <form method="post">
-        <input type="hidden" asp-for="User.ID" />
+        <input type="hidden" asp-for="ZooUser.ID" />
         <button type="submit" class="btn btn-danger">Delete</button>
         <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
     </form>
